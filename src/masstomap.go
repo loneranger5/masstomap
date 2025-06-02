@@ -12,6 +12,8 @@ import (
 	"strings"
 	"sync"
 
+	xslt "github.com/wamuir/go-xslt"
+
 	"github.com/Ullaakut/nmap/v2"
 )
 
@@ -37,6 +39,49 @@ type XMLHost struct {
 
 var urls []string
 var webprotos = []string{"http", "http-proxy", "https", "https-alt", "ssl"}
+
+// Generate Html Report from nmap xml file based on the work of github.com/capt-meelo/MassMap
+func GenerateHtml(nmapXmlFile string) error {
+	// Read the XSLT stylesheet
+	style, err := os.ReadFile("bootstrap-nmap.xsl")
+	if err != nil {
+		log.Fatalf("Failed to read stylesheet: %v", err)
+		return err
+	}
+
+	// Read the XML input
+	doc, err := os.ReadFile(nmapXmlFile)
+	if err != nil {
+		log.Fatalf("Failed to read XML input: %v", err)
+		return err
+	}
+
+	// Create a new stylesheet
+	xs, err := xslt.NewStylesheet(style)
+	if err != nil {
+		log.Fatalf("Failed to create stylesheet: %v", err)
+		return err
+	}
+	defer xs.Close()
+
+	// Perform the transformation
+	res, err := xs.Transform(doc)
+	if err != nil {
+		log.Fatalf("Transformation failed: %v", err)
+		return err
+	}
+
+	// Write the result to test.html
+	err = os.WriteFile("test.html", res, 0644)
+	if err != nil {
+		log.Fatalf("Failed to write output: %v", err)
+		return err
+	}
+
+	log.Println("Transformation completed successfully.")
+
+	return nil
+}
 
 // Reset the terminal state after execution
 func resetTerminal() {
@@ -361,6 +406,13 @@ func main() {
 	for _, url := range urls {
 		webf.Write([]byte(url))
 		//outputFile.WriteString("\n")
+	}
+
+	// Generate html via xslt transformations.
+	htmlGenerate := GenerateHtml(*outputFile)
+
+	if htmlGenerate != nil {
+		log.Println("Error generating html file.", htmlGenerate.Error())
 	}
 
 	resetTerminal()
