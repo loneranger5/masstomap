@@ -11,11 +11,14 @@ import (
 	"sort"
 	"strings"
 	"sync"
-
+	_ "embed"
 	xslt "github.com/wamuir/go-xslt"
 
 	"github.com/Ullaakut/nmap/v2"
 )
+
+//go:embed assets/bootstrap-nmap.xsl
+var bootstrapXSL []byte
 
 type Host struct {
 	StartTime int64  `xml:"starttime,attr"`
@@ -43,21 +46,22 @@ var webprotos = []string{"http", "http-proxy", "https", "https-alt", "ssl"}
 // Generate Html Report from nmap xml file based on the work of github.com/capt-meelo/MassMap
 func GenerateHtml(nmapXmlFile string) error {
 	// Read the XSLT stylesheet
-	style, err := os.ReadFile("bootstrap-nmap.xsl")
+	/*style, err := os.ReadFile("bootstrap-nmap.xsl")
 	if err != nil {
 		log.Fatalf("Failed to read stylesheet: %v", err)
 		return err
-	}
+	}*/
 
+	XmlFile := nmapXmlFile + ".nmap.xml"
 	// Read the XML input
-	doc, err := os.ReadFile(nmapXmlFile)
+	doc, err := os.ReadFile(XmlFile)
 	if err != nil {
 		log.Fatalf("Failed to read XML input: %v", err)
 		return err
 	}
 
 	// Create a new stylesheet
-	xs, err := xslt.NewStylesheet(style)
+	xs, err := xslt.NewStylesheet(bootstrapXSL)
 	if err != nil {
 		log.Fatalf("Failed to create stylesheet: %v", err)
 		return err
@@ -71,8 +75,9 @@ func GenerateHtml(nmapXmlFile string) error {
 		return err
 	}
 
-	// Write the result to test.html
-	err = os.WriteFile("test.html", res, 0644)
+	// Write the result
+	outHtmlFile := nmapXmlFile + ".html"
+	err = os.WriteFile(outHtmlFile, res, 0644)
 	if err != nil {
 		log.Fatalf("Failed to write output: %v", err)
 		return err
