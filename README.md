@@ -3,24 +3,25 @@
 masstomap is a simple python script that can be used to read masscan reports and execute nmap powerful service versioning and scripting tasks. 
 
 You need to specify a masscan standard report file (-oL) and a name for the nmap report file this tool should create. 
-A nmap grepable, text and xml report will be created. 
+A nmap grepable, text, xml and html report will be created. 
 
 ### Pause and Resume scan
 
 Masstomap creates a single nmap report per IP/target while it is running against a list of targets. The reason is that you can stop the scan and resume later. Soon as every target is scanned, masstomap will craft a single compliant nmap report using 3 different formats.
 
 ### NOTE ###
-Again, this tool will create 3 report files per IP/target (text, grepable, xml). All those files will be merged automatically in the end. Don't freak out.
+Again, this tool will create 3 report files per IP/target (text, grepable, xml, html). All those files will be merged automatically in the end. Don't freak out.
 
 ### FILES
 
-This tool will generate 4 files:<br>
+This tool will generate 5 files:<br>
 <br>
 ```
 <given-report-name>.new - a new masscan report using different notation (ip:port1,port2,portN) so you can run your own (custom) nmap scanning whenever you need.
 <given-report-name>.nmap.grepable - a grepable nmap report
 <given-report-name>.nmap.text - a standard text nmap report
 <given-report-name>.nmap.xml - a xml formated nmap report
+<given-report-name>.nmap.html - a html formated nmap report
 ```
 
 
@@ -78,6 +79,7 @@ Then masstomap:<br>
 $ python /usr/share/masstomap/masstomap.py -m output.masscan -o target.tcp
 $ ls
 output.masscan  output.masscan.new  target.tcp.nmap.grepable  target.tcp.nmap.txt  target.tcp.nmap.xml
+target.tcp.nmap.html
 $
 
 ```
