@@ -2,6 +2,7 @@ package main
 
 import (
 	"bufio"
+	_ "embed"
 	"encoding/xml"
 	"flag"
 	"fmt"
@@ -11,7 +12,7 @@ import (
 	"sort"
 	"strings"
 	"sync"
-	_ "embed"
+
 	xslt "github.com/wamuir/go-xslt"
 
 	"github.com/Ullaakut/nmap/v2"
@@ -364,7 +365,18 @@ func main() {
 	dryRun := flag.Bool("n", false, "Generate only the .new file without running Nmap scans")
 
 	flag.Parse()
+	genHtml := flag.String("g", "", "Generate only .html file providing nmap.xml")
 
+	flag.Parse()
+
+	if *genHtml != "" {
+		htmlGeneration := GenerateHtml(*genHtml)
+
+		if htmlGeneration != nil {
+			fmt.Println("Html Generation failed.", htmlGeneration.Error())
+		}
+		return
+	}
 	if *masscanFile == "" || *outputFile == "" {
 		log.Fatal("Masscan report file (-m) and base output file (-o) are required.")
 	}
