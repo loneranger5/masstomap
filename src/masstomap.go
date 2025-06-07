@@ -364,8 +364,8 @@ func main() {
 	userRate := flag.Int("r", 200, "Custom --min-rate value (default: 200)")
 	dryRun := flag.Bool("n", false, "Generate only the .new file without running Nmap scans")
 
-	flag.Parse()
 	genHtml := flag.String("g", "", "Generate only .html file providing nmap.xml")
+	flag.Parse()
 
 	flag.Parse()
 
