@@ -367,8 +367,6 @@ func main() {
 	genHtml := flag.String("g", "", "Generate only .html file providing nmap.xml")
 	flag.Parse()
 
-	flag.Parse()
-
 	if *genHtml != "" {
 		htmlGeneration := GenerateHtml(*genHtml)
 
