@@ -52,8 +52,14 @@ func GenerateHtml(nmapXmlFile string) error {
 		log.Fatalf("Failed to read stylesheet: %v", err)
 		return err
 	}*/
+	var XmlFile string
+	if strings.Contains(nmapXmlFile, ".xml") {
+		XmlFile = nmapXmlFile + ".nmap.xml"
+	} else {
 
-	XmlFile := nmapXmlFile + ".nmap.xml"
+		XmlFile = nmapXmlFile + ".nmap.xml"
+	}
+
 	// Read the XML input
 	doc, err := os.ReadFile(XmlFile)
 	if err != nil {
