@@ -54,7 +54,7 @@ func GenerateHtml(nmapXmlFile string) error {
 	}*/
 	var XmlFile string
 	if strings.Contains(nmapXmlFile, ".xml") {
-		XmlFile = nmapXmlFile + ".nmap.xml"
+		XmlFile = nmapXmlFile
 	} else {
 
 		XmlFile = nmapXmlFile + ".nmap.xml"
